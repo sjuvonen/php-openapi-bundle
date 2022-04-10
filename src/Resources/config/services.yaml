@@ -1,0 +1,305 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Juvonet\OpenApiBundle\:
+        resource: '../../*'
+        exclude:
+            - ../../DependencyInjection/
+            - ../../PropertyDescriber/
+            - ../../Resources/
+            - ../../Service/
+            - ../../*Interface.php
+
+    Juvonet\OpenApiBundle\Controller\:
+        resource: ../../Controller/
+        tags: ['controller.service_arguments']
+
+    Juvonet\OpenApi\DiscoveryInterface:
+        class: Juvonet\OpenApi\Service\Discovery
+
+    Juvonet\OpenApi\DocumentationGeneratorInterface:
+        class: Juvonet\OpenApi\Service\DocumentationGenerator
+        arguments:
+            $processors: !tagged { tag: juvonet.openapi.processor }
+
+    Juvonet\OpenApi\LoaderInterface:
+        class: Juvonet\OpenApi\Loader\LoaderChain
+        arguments:
+            $loaders: !tagged { tag: juvonet.openapi.loader }
+
+    Juvonet\OpenApi\OperationDescriberInterface:
+        class: Juvonet\OpenApi\OperationDescriber\OperationDescriberChain
+        arguments:
+            $describers: !tagged { tag: juvonet.openapi.operation_describer }
+
+    Juvonet\OpenApi\PropertyDescriberInterface:
+        class: Juvonet\OpenApi\PropertyDescriber\PropertyDescriberChain
+        arguments:
+            $describers: !tagged { tag: juvonet.openapi.property_describer }
+
+    Juvonet\OpenApi\SchemaDescriberInterface:
+        class: Juvonet\OpenApi\SchemaDescriber\SchemaDescriberChain
+        arguments:
+            $describers: !tagged { tag: juvonet.openapi.schema_describer }
+
+    Juvonet\OpenApi\SchemaRegistryInterface:
+        class: Juvonet\OpenApi\Service\SchemaRegistry
+
+    Juvonet\OpenApi\Serializer\NormalizerInterface:
+        class: Juvonet\OpenApi\Serializer\Normalizer\NormalizerChain
+        arguments:
+            $normalizers: !tagged { tag: juvonet.openapi.serializer.normalizer }
+
+    Juvonet\OpenApi\SerializerInterface:
+        class: Juvonet\OpenApi\Service\Serializer
+
+    Juvonet\OpenApiBundle\PropertyDescriber\Type\TypeDescriberInterface:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\Type\TypeDescriberChain
+        arguments:
+            $describers: !tagged { tag: juvonet.openapi.type_describer }
+
+    Juvonet\OpenApiBundle\TypeMapInterface:
+        class: Juvonet\OpenApiBundle\Service\TypeMap
+
+    Juvonet\OpenApiBundle\Routing\OpenApiRouteLoader:
+        arguments:
+            $loader: '@juvonet.openapi.loader.class_documentation'
+
+    juvonet.openapi.loader.class_documentation:
+        class: Juvonet\OpenApi\Loader\ClassDocumentationLoader
+        arguments:
+            $paths: '%juvonet.openapi.class_documentation_paths%'
+        tags:
+            - { name: juvonet.openapi.loader }
+
+    juvonet.openapi.loader.symfony:
+        class: Juvonet\OpenApiBundle\Loader\SymfonyLoader
+        tags:
+            - { name: juvonet.openapi.loader, priority: 900 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.operation_describer.symfony_description:
+        class: Juvonet\OpenApiBundle\OperationDescriber\SymfonyDescriptionOperationDescriber
+        tags:
+            - { name: juvonet.openapi.operation_describer, priority: 900 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.operation_describer.tags:
+        class: Juvonet\OpenApi\OperationDescriber\TagsOperationDescriber
+        arguments:
+            $trimPrefixes: '%juvonet.openapi.tags.trim_prefixes%'
+        tags:
+            - { name: juvonet.openapi.operation_describer, priority: -200 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.operation_describer.from:
+        class: Juvonet\OpenApi\OperationDescriber\ParametersFromOperationDescriber
+        tags:
+            - { name: juvonet.openapi.operation_describer, priority: 100 }
+
+    juvonet.openapi.processor.dereference:
+        class: Juvonet\OpenApi\Processor\Dereference
+        tags:
+            - { name: juvonet.openapi.processor, priority: -100 }
+
+    juvonet.openapi.processor.describe_schemas:
+        class: Juvonet\OpenApi\Processor\DescribeSchemas
+        tags:
+            - { name: juvonet.openapi.processor, priority: 1000 }
+
+    juvonet.openapi.processor.describe_paths:
+        class: Juvonet\OpenApi\Processor\DescribePaths
+        tags:
+            - { name: juvonet.openapi.processor, priority: 3000 }
+
+    juvonet.openapi.processor.describe_operations:
+        class: Juvonet\OpenApi\Processor\DescribeOperations
+        tags:
+            - { name: juvonet.openapi.processor, priority: 2000 }
+
+    juvonet.openapi.processor.describe_project:
+        class: Juvonet\OpenApi\Processor\DescribeProject
+        arguments:
+            $version: '%juvonet.openapi.project.version%'
+            $title: '%juvonet.openapi.project.title%'
+            $description: '%juvonet.openapi.project.description%'
+        tags:
+            - { name: juvonet.openapi.processor }
+
+    juvonet.openapi.processor.sort_by_tags:
+        class: Juvonet\OpenApi\Processor\SortPathsByTags
+        tags:
+            - { name: juvonet.openapi.processor, priority: -900 }
+
+    juvonet.openapi.property_describer.date_interval:
+        class: Juvonet\OpenApi\PropertyDescriber\DateIntervalPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 900 }
+
+    juvonet.openapi.property_describer.date_time:
+        class: Juvonet\OpenApi\PropertyDescriber\DateTimePropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 900 }
+
+    juvonet.openapi.property_describer.internal_comment:
+        class: Juvonet\OpenApi\PropertyDescriber\FilterInternalCommentPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: -900 }
+
+    juvonet.openapi.property_describer.items:
+        class: Juvonet\OpenApi\PropertyDescriber\ItemsPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 600 }
+
+    # juvonet.openapi.property_describer.items_ref:
+    #     class: Juvonet\OpenApi\PropertyDescriber\ItemsRefPropertyDescriber
+    #     tags:
+    #         - { name: juvonet.openapi.property_describer, priority: 100 }
+
+    juvonet.openapi.property_describer.object:
+        class: Juvonet\OpenApi\PropertyDescriber\ObjectPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: -800 }
+
+    # juvonet.openapi.property_describer.ref:
+    #     class: Juvonet\OpenApi\PropertyDescriber\RefPropertyDescriber
+    #     tags:
+    #         - { name: juvonet.openapi.property_describer, priority: 100 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.property_describer.symfony_access:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\SymfonyAccessPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 800 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.property_describer.symfony_constraint:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\SymfonyConstraintPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 800 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.property_describer.symfony_description:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\SymfonyDescriptionPropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 800 }
+
+    # Trusted source of truth: execute first and let other more specific type
+    # providers later override (or complement) the default assumption.
+    juvonet.openapi.property_describer.symfony_type:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\SymfonyTypePropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 900 }
+
+    juvonet.openapi.property_describer.doctrine_type:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\DoctrineTypePropertyDescriber
+        tags:
+            - { name: juvonet.openapi.property_describer, priority: 700 }
+
+    juvonet.openapi.schema_describer.attributes:
+        class: Juvonet\OpenApi\SchemaDescriber\AttributeSchemaDescriber
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: 800 }
+
+    juvonet.openapi.schema_describer.initialize:
+        class: Juvonet\OpenApi\SchemaDescriber\InitializeSchemaDescriber
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: -950 }
+
+    juvonet.openapi.schema_describer.public:
+        class: Juvonet\OpenApi\SchemaDescriber\PublicSchemaDescriber
+        arguments:
+            $namespaces: '%juvonet.openapi.public_schema_namespaces%'
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: 900 }
+
+    juvonet.openapi.schema_describer.public_fallback:
+        class: Juvonet\OpenApi\SchemaDescriber\PublicSchemaDescriber
+        arguments:
+            $namespaces: []
+            $fallback: true
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: 20 }
+
+    juvonet.openapi.schema_describer.properties:
+        class: Juvonet\OpenApi\SchemaDescriber\PropertySchemaDescriber
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: 10 }
+
+    juvonet.openapi.schema_describer.sort_properties:
+        class: Juvonet\OpenApi\SchemaDescriber\SortPropertiesSchemaDescriber
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: -200 }
+
+    juvonet.openapi.schema_describer.title:
+        class: Juvonet\OpenApi\SchemaDescriber\TitleSchemaDescriber
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: -100 }
+
+    juvonet.openapi.serializer.normalizer.context:
+        class: Juvonet\OpenApi\Serializer\Normalizer\ContextNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 900 }
+
+    juvonet.openapi.serializer.normalizer.enum:
+        class: Juvonet\OpenApi\Serializer\Normalizer\EnumNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 850 }
+
+    juvonet.openapi.serializer.normalizer.attribute:
+        class: Juvonet\OpenApi\Serializer\Normalizer\AttributeNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 800 }
+
+    juvonet.openapi.serializer.normalizer.custom_data_aware:
+        class: Juvonet\OpenApi\Serializer\Normalizer\CustomDataAwareNormalizer
+        decorates: Juvonet\OpenApi\Serializer\NormalizerInterface
+
+    juvonet.openapi.serializer.normalizer.iterable:
+        class: Juvonet\OpenApi\Serializer\Normalizer\IterableNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 600 }
+
+    juvonet.openapi.serializer.normalizer.json_serializable:
+        class: Juvonet\OpenApi\Serializer\Normalizer\JsonSerializableNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 700 }
+
+    juvonet.openapi.serializer.normalizer.null:
+        class: Juvonet\OpenApi\Serializer\Normalizer\NullNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 900 }
+
+    juvonet.openapi.serializer.normalizer.object:
+        class: Juvonet\OpenApi\Serializer\Normalizer\ObjectNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: -100 }
+
+    juvonet.openapi.serializer.normalizer.scalar:
+        class: Juvonet\OpenApi\Serializer\Normalizer\ScalarNormalizer
+        tags:
+            - { name: juvonet.openapi.serializer.normalizer, priority: 900 }
+
+    juvonet.openapi.type_describer.collection:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\Type\CollectionTypeDescriber
+        lazy: true
+        tags:
+            - { name: juvonet.openapi.type_describer, priority: 900 }
+
+    juvonet.openapi.type_describer.native:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\Type\NativeTypeDescriber
+        tags:
+            - { name: juvonet.openapi.type_describer, priority: 100 }
+
+    juvonet.openapi.type_describer.object:
+        class: Juvonet\OpenApiBundle\PropertyDescriber\Type\ObjectTypeDescriber
+        tags:
+            - { name: juvonet.openapi.type_describer, priority: -100 }

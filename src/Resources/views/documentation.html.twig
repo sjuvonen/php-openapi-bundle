@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>API Documentation</title>
+
+  <link rel="stylesheet" href="{{ asset('bundles/juvonetopenapi/swagger-ui-4.0.0/swagger-ui.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('bundles/juvonetopenapi/style.css') }}"/>
+</head>
+<body>
+  <div id="swagger-ui">
+  Loading...
+  </div>
+
+  {% block swagger_ui_js %}
+    <script src="{{ asset('bundles/juvonetopenapi/swagger-ui-4.0.0/swagger-ui-bundle.js') }}"></script>
+    <script src="{{ asset('bundles/juvonetopenapi/swagger-ui-4.0.0/swagger-ui-standalone-preset.js') }}"></script>
+  {% endblock %}
+
+  {% block init_ui_js %}
+    <script>
+      window.onload = async function () {
+        const url = {{ docs_url|json_encode|raw }}
+        const data = await window.fetch(url).then(response => response.json())
+
+        const ui = SwaggerUIBundle({
+          spec: data,
+          dom_id: '#swagger-ui',
+          validatorUrl: null,
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+          ],
+          plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl
+          ],
+          layout: 'StandaloneLayout'
+        })
+
+        window.ui = ui
+      }
+    </script>
+  {% endblock %}
+
+</body>
+</html>
