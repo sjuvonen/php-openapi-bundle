@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": "^8.1.0",
+        "sjuvonen/php-openapi": "dev-master",
         "symfony/config": "~6.0",
         "symfony/console": "~6.0",
         "symfony/dependency-injection": "~6.0",
@@ -24,13 +25,12 @@
         "symfony/http-kernel": "~6.0",
         "symfony/options-resolver": "~6.0",
         "symfony/property-info": "~6.0",
-        "symfony/routing": "~6.0",
-        "sjuvonen/php-openapi": "^1.0.0"
+        "symfony/routing": "~6.0"
     },
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/sjuvonen/php-openapi"
+            "url": "/home/samu/Projects/personal/php-openapi/library"
         }
     ]
 }
