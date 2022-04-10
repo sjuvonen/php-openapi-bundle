@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Juvonet\\OpenApiBundle\\": "src/Juvonet/OpenApiBundle"
+            "Juvonet\\OpenApiBundle\\": "src"
         }
     },
     "authors": [
@@ -31,7 +31,7 @@
         {
             "name": "sjuvonen/php-openapi",
             "type": "vcs",
-            "url": "/home/samu/Projects/personal/php-openapi/library"
+            "url": "https://github.com/sjuvonen/php-openapi"
         }
     ]
 }
