@@ -29,6 +29,7 @@
     },
     "repositories": [
         {
+            "name": "sjuvonen/php-openapi",
             "type": "vcs",
             "url": "/home/samu/Projects/personal/php-openapi/library"
         }
