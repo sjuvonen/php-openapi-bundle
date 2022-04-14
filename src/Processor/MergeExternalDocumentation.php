@@ -24,7 +24,7 @@ class MergeDocumentationFiles
     private array $index;
 
     public function __construct(
-        private \Framework\OpenApiExtensionBundle\Util\Markdown\SchemaParser $schemaParser,
+        private \Juvonet\OpenApiBundle\Util\Markdown\SchemaParser $schemaParser,
         private array $paths,
     ) {
     }
