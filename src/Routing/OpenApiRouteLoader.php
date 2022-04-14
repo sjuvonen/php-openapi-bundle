@@ -73,10 +73,6 @@ class OpenApiRouteLoader implements RouteLoaderInterface
 
     private function extractRaw(Operation $operation, string $prefix): array
     {
-        if (!is_array($operation->x)) {
-            return [];
-        }
-
         $values = [];
 
         foreach ($operation->x as $key => $value) {
