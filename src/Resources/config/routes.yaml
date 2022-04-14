@@ -1,9 +1,9 @@
 juvonet_openapi.docs:
-    path: /openapi/docs.json
+    path: /api/docs.json
     controller: Juvonet\OpenApiBundle\Controller\DocumentationAction
     methods: GET
 
 juvonet_openapi.ui:
-    path: /openapi
+    path: /api
     controller: Juvonet\OpenApiBundle\Controller\IndexAction
     methods: GET
