@@ -33,8 +33,6 @@ class MergeDocumentationFiles
     {
         $this->buildFileCache();
 
-        $elements = [...$this->extractOperations($openApi->paths), ...$openApi->components->schemas];
-
         foreach (PathItems::extractOperations($openApi->paths) as $operation) {
             $this->tryPopulateOperation($operation);
         }
