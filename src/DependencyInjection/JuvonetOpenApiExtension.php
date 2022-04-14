@@ -18,6 +18,7 @@ class JuvonetOpenApiExtension extends Extension
         $processed = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('juvonet.openapi.class_documentation_paths', $processed['discovery']['class_loader']['paths']);
+        $container->setParameter('juvonet.openapi.external_documentation_paths', $processed['discovery']['external_loader']['paths']);
         $container->setParameter('juvonet.openapi.project.title', $processed['project']['title']);
         $container->setParameter('juvonet.openapi.project.description', $processed['project']['description']);
         $container->setParameter('juvonet.openapi.project.version', $processed['project']['version']);

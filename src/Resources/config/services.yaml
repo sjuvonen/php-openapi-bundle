@@ -131,6 +131,15 @@ services:
         tags:
             - { name: juvonet.openapi.processor }
 
+    # Must be executed after dereferencing, which is when most schemas are
+    # actually discovered.
+    juvonet.openapi.processor.external_documentation:
+        class: Framework\OpenApiExtensionBundle\Processor\MergeDocumentationFiles
+        arguments:
+            $paths: '%juvonet.openapi.external_documentation_paths%'
+        tags:
+            - { name: juvonet.openapi.processor, priority: -200 }
+
     juvonet.openapi.processor.sort_by_tags:
         class: Juvonet\OpenApi\Processor\SortPathsByTags
         tags:
