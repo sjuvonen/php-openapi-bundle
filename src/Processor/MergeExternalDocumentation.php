@@ -18,7 +18,7 @@ use Symfony\Component\Finder\Finder;
  * The processor will discover Markdown files in specified locations and tries
  * to populate operations and schemas with loaded information.
  */
-class MergeDocumentationFiles
+class MergeExternalDocumentation
 {
     private array $files;
     private array $index;
