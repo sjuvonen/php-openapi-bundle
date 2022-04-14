@@ -51,7 +51,11 @@ class OpenApiRouteLoader implements RouteLoaderInterface
         $options = $this->extract($operation, 'option');
         $defaults = $this->extract($operation, 'default');
 
-        $defaults['_controller'] = "{$operation->context->class}::{$operation->context->method}";
+        if (!$operation->context->method || $operation->context->method === '__invoke') {
+            $defaults['_controller'] = $operation->context->class;
+        } else {
+            $defaults['_controller'] = "{$operation->context->class}::{$operation->context->method}";
+        }
 
         /**
          * FIXME: Extract entity bundle metadata. Should move it to EntityBundle
