@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\OpenApiExtensionBundle\Util\Markdown;
+namespace Juvonet\OpenApiBundle\Util\Markdown;
 
 class SchemaParser
 {

@@ -134,7 +134,7 @@ services:
     # Must be executed after dereferencing, which is when most schemas are
     # actually discovered.
     juvonet.openapi.processor.external_documentation:
-        class: Framework\OpenApiExtensionBundle\Processor\MergeDocumentationFiles
+        class: Juvonet\OpenApiBundle\Processor\MergeDocumentationFiles
         arguments:
             $paths: '%juvonet.openapi.external_documentation_paths%'
         tags:

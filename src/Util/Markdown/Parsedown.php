@@ -9,7 +9,7 @@
  *   https://github.com/erusev/parsedown (License: MIT)
  */
 
-namespace Framework\OpenApiExtensionBundle\Util\Markdown;
+namespace Juvonet\OpenApiBundle\Util\Markdown;
 
 class Parsedown
 {

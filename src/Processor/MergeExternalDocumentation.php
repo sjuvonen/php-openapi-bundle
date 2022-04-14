@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\OpenApiExtensionBundle\Processor;
+namespace Juvonet\OpenApiBundle\Processor;
 
 use Juvonet\OpenApi\Documentation\Meta\Items;
 use Juvonet\OpenApi\Documentation\AbstractSchema;
