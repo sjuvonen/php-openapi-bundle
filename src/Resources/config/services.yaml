@@ -140,10 +140,15 @@ services:
         tags:
             - { name: juvonet.openapi.processor, priority: -200 }
 
-    juvonet.openapi.processor.sort_by_tags:
+    juvonet.openapi.processor.sort_paths:
         class: Juvonet\OpenApi\Processor\SortPathsByTags
         tags:
             - { name: juvonet.openapi.processor, priority: -900 }
+
+    juvonet.openapi.processor.sort_schemas:
+        class: Juvonet\OpenApi\Processor\SortSchemas
+        tags:
+            - { name: juvonet.openapi.processor, priority: -910 }
 
     juvonet.openapi.property_describer.date_interval:
         class: Juvonet\OpenApi\PropertyDescriber\DateIntervalPropertyDescriber
