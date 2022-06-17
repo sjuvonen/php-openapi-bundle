@@ -9,6 +9,7 @@ services:
             - ../../DependencyInjection/
             - ../../PropertyDescriber/
             - ../../Resources/
+            - ../../Routing/OpenApiRouteLoader.php
             - ../../Service/
             - ../../*Interface.php
 
@@ -62,10 +63,6 @@ services:
 
     Juvonet\OpenApiBundle\TypeMapInterface:
         class: Juvonet\OpenApiBundle\Service\TypeMap
-
-    Juvonet\OpenApiBundle\Routing\OpenApiRouteLoader:
-        arguments:
-            $loader: '@juvonet.openapi.loader.class_documentation'
 
     juvonet.openapi.loader.class_documentation:
         class: Juvonet\OpenApi\Loader\ClassDocumentationLoader
