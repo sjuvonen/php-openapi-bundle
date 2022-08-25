@@ -137,6 +137,11 @@ services:
         tags:
             - { name: juvonet.openapi.processor, priority: -200 }
 
+    juvonet.openapi.processor.prefix_paths_by_router:
+        class: Juvonet\OpenApiBundle\Processor\PrefixPathsByRouter
+        tags:
+            - { name: juvonet.openapi.processor, priority: -800 }
+
     juvonet.openapi.processor.sort_paths:
         class: Juvonet\OpenApi\Processor\SortPathsByTags
         tags:
