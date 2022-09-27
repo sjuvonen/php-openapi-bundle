@@ -17,6 +17,9 @@ services:
         resource: ../../Controller/
         tags: ['controller.service_arguments']
 
+    Juvonet\OpenApi\DereferencerInterface:
+        class: Juvonet\OpenApi\Service\Dereferencer
+
     Juvonet\OpenApi\DiscoveryInterface:
         class: Juvonet\OpenApi\Service\Discovery
 
