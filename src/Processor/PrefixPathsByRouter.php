@@ -29,7 +29,7 @@ class PrefixPathsByRouter
                     continue;
                 }
 
-                $oid = strtr($operation->operationId, ['-' => '_']);
+                $oid = strtr($operation->operationId ?? '', ['-' => '_']);
 
                 /**
                  * Prefix paths by looking for matches by Operation ID.
