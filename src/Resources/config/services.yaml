@@ -10,6 +10,7 @@ services:
             - ../../PropertyDescriber/
             - ../../Resources/
             - ../../Routing/OpenApiRouteLoader.php
+            - ../../SchemaDescriber/
             - ../../Service/
             - ../../*Interface.php
 
@@ -227,6 +228,13 @@ services:
         class: Juvonet\OpenApi\SchemaDescriber\AttributeSchemaDescriber
         tags:
             - { name: juvonet.openapi.schema_describer, priority: 800 }
+
+    juvonet.openapi.schema_describer.inaccessible_properties:
+        class: Juvonet\OpenApiBundle\SchemaDescriber\InaccessiblePropertiesSchemaDescriber
+        arguments:
+            $propertyListExtractor: '@property_info.serializer_extractor'
+        tags:
+            - { name: juvonet.openapi.schema_describer, priority: -200 }
 
     juvonet.openapi.schema_describer.initialize:
         class: Juvonet\OpenApi\SchemaDescriber\InitializeSchemaDescriber
