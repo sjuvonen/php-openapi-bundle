@@ -2,17 +2,20 @@
 
 namespace Juvonet\OpenApiBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[
+    AsCommand(
+        name: 'openapi:dump',
+        description: 'Dumps Open API documentation into a file.',
+    )
+]
 class DumpOpenApiCommand extends Command
 {
-    protected static $defaultName = 'openapi:dump';
-    protected static $defaultDescription = 'Dumps OpenAPI documentation into a file.';
-
     public function __construct(
         private \Juvonet\OpenApi\DocumentationGeneratorInterface $documentationGenerator,
         private \Juvonet\OpenApi\SerializerInterface $serializer,
