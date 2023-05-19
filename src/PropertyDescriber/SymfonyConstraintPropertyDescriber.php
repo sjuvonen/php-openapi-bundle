@@ -36,7 +36,7 @@ class SymfonyConstraintPropertyDescriber implements PropertyDescriberInterface
         foreach ($constraints as $constraint) {
             switch (true) {
                 case $constraint instanceof Choice:
-                    if ($choices = $this->getChoices($constraint)) {
+                    if ($choices = $this->getChoices($constraint, $property->context->class)) {
                         $property->enum = $choices;
                     }
                     break;
@@ -70,14 +70,24 @@ class SymfonyConstraintPropertyDescriber implements PropertyDescriberInterface
         }
     }
 
-    private function getChoices(Choice $constraint): ?array
+    private function getChoices(Choice $constraint, string $className): ?array
     {
         if ($constraint->choices) {
             return array_values($constraint->choices);
         }
 
         if ($constraint->callback) {
-            return array_values(($constraint->callback)());
+            $callback = is_string($constraint->callback) ? [$className, $constraint->callback] : $constraint->callback;
+
+            if (is_callable($callback)) {
+                return array_values($callback());
+            } else {
+                /**
+                 * Symfony allows some hacks in this parameter so it isn't always necessarily
+                 * properly callable.
+                 */
+                return [];
+            }
         }
 
         return null;
